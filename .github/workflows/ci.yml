@@ -21,4 +21,4 @@ jobs:
           java-version: '18'
 
       - name: Compile Java files
-        run: javac *.java
+        run: javac $(find src/main/java -name "*.java")
