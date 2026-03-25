@@ -1,0 +1,25 @@
+{
+    "name": "COMP3050 Week 4 – Testing",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "forwardPorts": [8000],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vscjava.vscode-java-test"
+            ],
+            "settings": {
+                "java.configuration.runtimes": [
+                    {
+                        "name": "JavaSE-18",
+                        "path": "/opt/java/openjdk",
+                        "default": true
+                    }
+                ]
+            }
+        }
+    },
+    "postCreateCommand": "mvn dependency:resolve"
+}
