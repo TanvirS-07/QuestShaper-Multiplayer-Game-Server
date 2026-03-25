@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuestShaper Game</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!--link rel="icon" href="QuestShaper.jpg" /-->
+  </head>
+  <body onload="startGame()">
+
+    <div id="questshaper">
+      <canvas id="canvas" width="704" height="704"></canvas>
+      <div id="info">
+        Server: <input id="server" size="40" value="http://localhost:8000" />
+        <button id="begin">Begin Questing</button>
+      </div>
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: #d7d7d7;
+}
+
+#questshaper {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid black;
+  padding: 20px;
+}
+
+#canvas {
+  display: block;
+  width: 100%;
+  max-width: 684px;
+  height: auto;
+  background-color: #000;
+  position: relative;
+  color: #fff;
+}
+
+#info {
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  max-width: 684px;
+  padding: 10px;
+}
