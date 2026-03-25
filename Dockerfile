@@ -1,10 +1,11 @@
-FROM eclipse-temurin:18-jdk
+FROM maven:3.9-eclipse-temurin-18
 
 WORKDIR /app
 
 COPY . .
 
+RUN mvn clean package -DskipTests
+
 EXPOSE 8000
 
-# Replace this later with your actual build/run command
-CMD ["java", "-version"]
+CMD ["mvn", "exec:java", "-Dexec.mainClass=Main"]
