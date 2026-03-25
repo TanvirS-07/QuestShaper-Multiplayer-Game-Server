@@ -66,14 +66,14 @@ COMP3050 Project/
 ├── README.md
 
 ## Development Plan (Unfinished)
-### Phase 1 – Setup
+### Phase 1 – Setup (Finished)
 - Create repository
 - Set up Java server skeleton
 - Add Dockerfile (basic)
 - Define project structure
 - Create README.md
 
-### Phase 2 – Add core functions
+### Phase 2 – Add core functions 
 - Implement map loader
 - Implement player state
 - Implement /move endpoint
