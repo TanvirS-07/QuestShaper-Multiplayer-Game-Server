@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 public class MoveHandler implements HttpHandler{
-    private int playerX = 5;
-    private int playerY = 5;
+    private static int playerX = 5;
+    private static int playerY = 5;
 
-    private static char[][] map;
+    /*private static char[][] map;
     private static int map_width;
     private static int map_height;
     
@@ -28,8 +28,13 @@ public class MoveHandler implements HttpHandler{
             e.printStackTrace();
             System.exit(1);
         }
-    }
+    }*/
 
+    private static final char[][] map = MapData.map;
+    private static final int map_width = MapData.mapWidth;
+    private static final int map_height = MapData.mapHeight;
+
+    
     public void handle(HttpExchange exchange) throws IOException{
 
         if (!exchange.getRequestMethod().equalsIgnoreCase("GET")){
