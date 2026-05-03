@@ -20,6 +20,10 @@ public class Main {
             sendResponse(exchange, response);
         });
 
+        server.createContext("/login", new LoginHandler());
+        server.createContext("/logout", new LogoutHandler());
+        
+
         server.start();
         System.out.println("Server started on port 8000");
     }
