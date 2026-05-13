@@ -10,10 +10,13 @@
   <body onload="startGame()">
 
     <div id="questshaper">
-      <canvas id="canvas" width="704" height="704"></canvas>
+      <canvas id="canvas" width="704" height="704" tabindex="0" focus="true"></canvas>
       <div id="info">
-        Server: <input id="server" size="40" value="http://localhost:8000" />
-        <button id="begin">Begin Questing</button>
+        Name: <input id="name" size="20" value="" tabindex="1" />
+        Password: <input id="password" type="password" size="20" value="" tabindex="2" />
+        <br/><br/>
+        Server: <input id="server" size="30" value="http://localhost:8000" tabindex="3" />
+        <button id="begin" tabindex="4">Begin Questing</button>
       </div>
     </div>
     <script type="text/javascript" src="script.js"></script>

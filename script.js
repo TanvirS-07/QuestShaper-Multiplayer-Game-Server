@@ -30,6 +30,14 @@ var posY = 5;
 // Timer settings.
 const animation_time = 100; // 100 milliseconds = 10 frames per second.
 
+// Map polling time.
+const polling_time = 250; // Update map every 250 milliseconds (4fps).
+var polling_counter = 0; // Current polling counter (counts up).
+
+// User login status.
+var player_name = "";
+var session = "";
+
 // Server address.
 var server_addr = "http://localhost:8000";
 
@@ -41,23 +49,23 @@ var map_width = 20;
 var map_height = 20;
 
 var map = [
-	['g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', '.', 'W', 'g', 't', 't', 'g', 'g', 't', 'g', 'g', 'g', ],
+	['g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', '.', 'W', 'g', 't', 't', 'gk','g', 't', 'g', 'g', 'g', ],
 	['S', 'S', 'S', 'S', 'S', 'S', 'g', 'g', 'g', 'g', 'W', 'g', 't', ';', 't', 't', 't', 'g', 'g', 'g', ],
-	['S', 'w', 'w', 'w', 'w', 'S', 'g', 'g', 'g', 'W', 'W', 'g', 't', 't', 't', 't', 't', 't', 'g', 'g', ],
+	['S', 'wa','w', 'w', 'w', 'S', 'g', 'g', 'g', 'W', 'W', 'g', 't', 't', 't', 't', 't', 't', 'g', 'g', ],
 	['S', 'w', 'w', 'w', 'w', 'S', 'g', 'g', 'W', 'W', 'g', 'g', 't', 't', 't', 't', 't', 'g', 'g', 'g', ],
-	['S', 'S', 'S', 'D', 'S', 'S', 'g', 'g', 'W', 'g', 'g', 't', 't', 't', 'g', 'g', 'g', 'g', 'g', 'g', ],
+	['S', 'S', 'S', 'wd','S', 'S', 'g', 'g', 'W', 'g', 'g', 't', 't', 't', 'g', 'g', 'g', 'g', 'g', 'g', ],
 	['g', 'g', ',', '_', 'g', 'g', 'g', 'W', 'W', 'W', 'g', 't', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', ],
-	['.', 'g', 'g', '_', 'g', 'g', 'g', 'W', 'g', 'W', '.', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', ],
+	['.', 'g', 'g', '_', 'g', 'g', 'g', 'W', 'g', 'Wb','.', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', ],
 	['_', '_', '_', '_', 'g', 'g', 'W', 'W', 'g', 'W', 'W', 'g', 'g', 'g', 'g', '_', '_', '_', '_', '_', ],
 	['_', 'g', 't', 't', 'g', 'W', 'W', 'W', 'g', 'g', 'W', 'g', 'g', 'g', 'g', '_', 'g', 'g', 'g', 'g', ],
-	['_', 'g', 'g', 't', 'g', 'W', 'W', 'g', 'g', 'g', 'W', 'g', 'g', 'g', 'B', 'D', 'B', 'g', 'g', 'g', ],
+	['_', 'g', 'g', 't', 'g', 'W', 'W', 'g', 'g', 'g', 'W', 'g', 'g', 'g', 'B', 'fD','B', 'g', 'g', 'g', ],
 	['_', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'W', 'W', 'g', 'g', 'B', 'f', 'B', '.', 'g', 'g', ],
 	['_', 'g', 'g', 'g', 'g', 'g', 't', 't', 'g', 'W', 'W', 'g', 'g', 'B', 'B', 'f', 'B', 'B', 'g', 'g', ],
 	['_', 'g', 'g', 'g', 'g', 'g', 't', 'g', 'g', 'W', ',', 'g', 'g', 'B', 'f', 'f', 'f', 'B', 'g', 'g', ],
-	['_', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'W', 'W', 'g', 'g', 'B', 'f', 'f', 'f', 'B', 'g', 'g', ],
+	['_', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'W', 'W', 'g', 'g', 'B', 'f', 'fh','f', 'B', 'g', 'g', ],
 	['_', '_', 'g', 'g', 'g', 'g', 'g', 'g', 'W', '.', 'W', 'g', 'g', 'B', 'f', 'f', 'f', 'B', 'g', 'g', ],
 	['g', '_', '_', 'g', 'g', 'g', 'g', 'W', 'W', 'g', 'W', 'g', 'g', 'B', 'B', 'B', 'B', 'B', 'g', 'g', ],
-	['g', 'g', '_', 'g', 'g', 'g', 'g', 'W', 'g', 'g', 'W', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', ],
+	['g', 'g', '_', 'g', 'g', 'g', 'g', 'W', 'gc','g', 'W', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', ],
 	['g', 'g', '_', 'g', 'g', 'g', 'W', 'W', 'g', 'g', 'W', 'W', 'g', 'g', ':', 'g', 'g', 'g', 'g', 'g', ],
 	['g', 'g', 'g', 'g', 'g', 'W', 'W', 'W', 'g', 'g', 'W', 'W', 'g', 'g', 'g', 'g', 't', 'g', 'g', 'g', ],
 	['g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'W', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', ],
@@ -92,68 +100,131 @@ function draw_image_offset(dst, dst_x, dst_y, src, src_x, src_y, src_width, src_
 		src, src_x, src_y, src_width - offset_x, src_height - offset_y);
 }
 
-class Terrain {
-	constructor(kind, tile, blocking, cycles, filename) {
+class Tile {
+	constructor(kind, image, blocking, cycles, movable, filename) {
 		this.kind = kind;
-		this.tile = tile;
+		this.image = image;
 		this.blocking = blocking;
 		this.cycles = cycles;
+		this.movable = movable;
 		this.filename = filename;
 	}
 }
 
-var terrains = [
-	new Terrain( 'B', null, true,  false, "brickwall.png"    ),
-	new Terrain( 'b', null, false, false, "bridge.png"       ),
-	new Terrain( 'D', null, true,  false, "doorsclosed.png"  ),
-	new Terrain( 'd', null, false, false, "doorsopened.png"  ),
-	new Terrain( '_', null, false, false, "dirt.png"         ),
-	new Terrain( 'f', null, false, false, "flagstones.png"   ),
-	new Terrain( 'g', null, false, false, "grass.png"        ),
-	new Terrain( 'p', null, false, false, "pebbles.png"      ),
-	new Terrain( '.', null, false, false, "rocks1.png"       ),
-	new Terrain( ',', null, false, false, "rocks2.png"       ),
-	new Terrain( ':', null, false, false, "rocks3.png"       ),
-	new Terrain( ';', null, false, false, "rocks6.png"       ),
-	new Terrain( 's', null, false, false, "sand.png"         ),
-	new Terrain( 'S', null, true,  false, "stonewall.png"    ),
-	new Terrain( 't', null, false, false, "tree.png"         ),
-	new Terrain( 'W', null, true,  true,  "waterwaves.png"   ),
-	new Terrain( 'w', null, false, false, "woodenboards.png" ),
+var tiles = [
+	new Tile( '0', null, true,  false, false, "player0.png"      ),
+	new Tile( '1', null, true,  false, false, "player1.png"      ),
+	new Tile( '2', null, true,  false, false, "player2.png"      ),
+	new Tile( '3', null, true,  false, false, "player3.png"      ),
+	new Tile( '4', null, true,  false, false, "player4.png"      ),
+	new Tile( '5', null, true,  false, false, "player5.png"      ),
+	new Tile( '6', null, true,  false, false, "player6.png"      ),
+	new Tile( '7', null, true,  false, false, "player7.png"      ),
+	new Tile( '8', null, true,  false, false, "player8.png"      ),
+	new Tile( '9', null, true,  false, false, "player9.png"      ),
+	new Tile( 'a', null, false, false, true,  "axe.png"          ),
+	new Tile( 'B', null, true,  false, false, "brickwall.png"    ),
+	new Tile( 'b', null, false, false, false, "bridge.png"       ),
+	new Tile( 'c', null, false, false, true,  "cyanpotion.png"   ),
+	new Tile( 'D', null, true,  false, false, "doorsclosed.png"  ),
+	new Tile( 'd', null, false, false, false, "doorsopened.png"  ),
+	new Tile( '_', null, false, false, false, "dirt.png"         ),
+	new Tile( 'f', null, false, false, false, "flagstones.png"   ),
+	new Tile( 'g', null, false, false, false, "grass.png"        ),
+	new Tile( 'h', null, false, false, true,  "heartpotion.png"  ),
+	new Tile( 'k', null, false, false, true,  "key.png"          ),
+	new Tile( 'p', null, false, false, false, "pebbles.png"      ),
+	new Tile( '.', null, false, false, false, "rocks1.png"       ),
+	new Tile( ',', null, false, false, false, "rocks2.png"       ),
+	new Tile( ':', null, false, false, false, "rocks3.png"       ),
+	new Tile( ';', null, false, false, false, "rocks6.png"       ),
+	new Tile( 's', null, false, false, false, "sand.png"         ),
+	new Tile( 'S', null, true,  false, false, "stonewall.png"    ),
+	new Tile( 't', null, false, false, false, "tree.png"         ),
+	new Tile( 'W', null, true,  true,  false, "waterwaves.png"   ),
+	new Tile( 'w', null, false, false, false, "woodenboards.png" ),
 ];
 
-var player1_filename = "player1.png";
 var player_tile = null;
 
-function find_terrain_by_kind(kind) {
-	for (let  t = 0; t < terrains.length; t++) {
-		if (terrains[t].kind == kind) {
-			return terrains[t];
+function find_tile_by_kind(kind) {
+	for (let t = 0; t < tiles.length; t++) {
+		if (tiles[t].kind == kind) {
+			return tiles[t];
 		}
 	}
 	return null;
 }
 
-function is_blocking(terrain) {
-	if (terrain == null) {
-		return true;
+function last_blocking(kinds) {
+	var blocking = false;
+	for (kind of kinds) {
+		var tile = find_tile_by_kind(kind);
+		if (tile == null) {
+			blocking = true;
+		}
+		blocking = tile.blocking;
 	}
-	return terrain.blocking;
+	return blocking;
 }
 
-async function load_all_terrain_tiles() {
-	for (let t = 0; t < terrains.length; t++) {
-		tile = new Image();
-		tile.src = asset_path + terrains[t].filename;
-		await tile.decode();
-		terrains[t].tile = tile;
+async function load_all_tiles() {
+	for (let t = 0; t < tiles.length; t++) {
+		image = new Image();
+		image.src = asset_path + tiles[t].filename;
+		await image.decode();
+		tiles[t].image = image;
 	}
 }
 
-async function load_all_player_tiles() {
-	player_tile = new Image();
-	player_tile.src = asset_path + player1_filename;
-	await player_tile.decode();
+async function sha256(message) {
+	const encoded = new TextEncoder().encode(message);
+	const buffer = await crypto.subtle.digest('SHA-256', encoded);
+	const array = Array.from(new Uint8Array(buffer));
+	return array.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function fetch_login_session(name, password) {
+	try {
+		var encrypted = await sha256(name + ';' + password);
+		const response = await fetch(server_addr +
+			`/login`, {
+			method: 'POST',
+			headers: {'Content-type': 'application/json; charset=UTF-8'},
+			body: `{"name":"${name}", "encpswrd":"${encrypted}"}`
+		});
+		if (! response) {
+			throw new Error(`HTTP error! login failed`);
+		}
+		if (! response.ok) {
+			throw new Error(`HTTP error! login not ok status: ${response.status}`);
+		}
+		const result = await response.json();
+		return result.session;
+	} catch (error) {
+		console.error('Error:', error);
+		return '';
+	}
+}
+
+async function fetch_logout(session) {
+	try {
+		const response = await fetch(server_addr +
+			`/logout?session=${session}`, {
+			method: 'GET',
+			headers: {'Content-type': 'text/plain; charset=UTF-8'}
+		});
+		if (! response) {
+			throw new Error(`HTTP error! logout failed`);
+		}
+		if (! response.ok) {
+			throw new Error(`HTTP error! logout not ok status: ${response.status}`);
+		}
+		return await response.text();
+	} catch (error) {
+		console.error('Error:', error);
+		return null;
+	}
 }
 
 function fix_x(x) {
@@ -218,7 +289,8 @@ function set_map_window(abs_top, abs_left, abs_bottom, abs_right, map_data) {
 
 async function fetch_map(y, x) {
 	try {
-		const response = await fetch(server_addr + `/info?y=${y}&x=${x}`, {
+		const response = await fetch(server_addr +
+			`/info?y=${y}&x=${x}&session=${session}`, {
 			method: 'GET',
 			headers: {'Content-type': 'application/json; charset=UTF-8'}
 		});
@@ -227,6 +299,9 @@ async function fetch_map(y, x) {
 		}
 		if (! response.ok) {
 			throw new Error(`HTTP error! info not ok status: ${response.status}`);
+		}
+		if (response.status != 200) {
+			throw new Error(`HTTP error! info not 200 status: ${response.status}`);
 		}
 		const result = await response.json();
 		return result;
@@ -248,7 +323,8 @@ async function fetch_map_and_refresh() {
 
 async function move_request(dy, dx) {
 	try {
-		const response = await fetch(server_addr + `/move?dy=${dy}&dx=${dx}`, {
+		const response = await fetch(server_addr +
+			`/move?dy=${dy}&dx=${dx}&session=${session}`, {
 			method: 'GET',
 			headers: {'Content-type': 'text/plain; charset=UTF-8'}
 		});
@@ -266,9 +342,74 @@ async function move_request(dy, dx) {
 	}
 }
 
+async function use_request(dy, dx) {
+	try {
+		const response = await fetch(server_addr +
+			`/use?dy=${dy}&dx=${dx}&session=${session}`, {
+			method: 'GET',
+			headers: {'Content-type': 'text/plain; charset=UTF-8'}
+		});
+		if (! response) {
+			throw new Error(`HTTP error! use failed`);
+		}
+		if (response.status != 200) {
+			console.log(`HTTP error! use not 200 status: ${response.status}`);
+			return "";
+		}
+		return await response.text();
+	} catch (error) {
+		console.error('Error:', error);
+		return "error";
+	}
+}
+
+async function take_request() {
+	try {
+		const response = await fetch(server_addr +
+			`/take?session=${session}`, {
+			method: 'GET',
+			headers: {'Content-type': 'text/plain; charset=UTF-8'}
+		});
+		if (! response) {
+			throw new Error(`HTTP error! take failed`);
+		}
+		if (response.status != 200) {
+			console.log(`HTTP error! take not 200 status: ${response.status}`);
+			return "";
+		}
+		return await response.text();
+	} catch (error) {
+		console.error('Error:', error);
+		return "error";
+	}
+}
+
+async function place_request() {
+	try {
+		const response = await fetch(server_addr +
+			`/place?session=${session}`, {
+			method: 'GET',
+			headers: {'Content-type': 'text/plain; charset=UTF-8'}
+		});
+		if (! response) {
+			throw new Error(`HTTP error! place failed`);
+		}
+		if (response.status != 200) {
+			console.log(`HTTP error! place not 200 status: ${response.status}`);
+			return "";
+		}
+		return await response.text();
+	} catch (error) {
+		console.error('Error:', error);
+		return "error";
+	}
+}
+
 var gameArea = {
 	canvas : document.getElementById("canvas"),
 	server : document.getElementById("server"),
+	nameInput : document.getElementById("name"),
+	passwordInput : document.getElementById("password"),
 	beginBtn : document.getElementById("begin"),
 	display_map: function() {
 		for (let y = 0; y < view_height; y++) {
@@ -291,36 +432,40 @@ var gameArea = {
 					continue;
 				}
 
-				var kind = get_map_yx(srcY, srcX);
+				var kinds = get_map_yx(srcY, srcX);
 
-				var terrain = find_terrain_by_kind(kind);
-				if ((terrain == null) || (terrain.tile == null)) {
-					this.context.fillStyle = "black";
-					this.context.fillRect(dst_x, dst_y, tile_width, tile_height);
-					continue;
-				}
-				var tile = terrain.tile;
-				if (terrain.cycles) {
-					draw_image_offset(this.context, dst_x, dst_y,
-						tile, 0, 0, tile_width, tile_height,
-						offsetX, offsetY);
-				} else {
-					draw_image(this.context, dst_x, dst_y,
-						tile, 0, 0, tile_width, tile_height);
+				for (const kind of kinds) {
+					var tile = find_tile_by_kind(kind);
+					if ((tile == null) || (tile.image == null)) {
+						this.context.fillStyle = "black";
+						this.context.fillRect(dst_x, dst_y, tile_width, tile_height);
+						continue;
+					}
+					var image = tile.image;
+					if (tile.cycles) {
+						draw_image_offset(this.context, dst_x, dst_y,
+							image, 0, 0, tile_width, tile_height,
+							offsetX, offsetY);
+					} else {
+						draw_image(this.context, dst_x, dst_y,
+							image, 0, 0, tile_width, tile_height);
+					}
 				}
 			}
 		}
 	},
 	display_players: function() {
-		var tile = player_tile;
+		var image = player_tile.image;
 		draw_image(this.context, playerX * tile_width, playerY * tile_height,
-			tile, 0, 0, tile_width, tile_height);
+			image, 0, 0, tile_width, tile_height);
 	},
 	draw_all: function() {
 		this.display_map();
-		this.display_players();
+		if (! this.isLoggedIn()) {
+			this.display_players();
+		}
 	},
-	update: function() {
+	cycle_graphics: function() {
 		// Cycle the offset.
 		offsetX += windX;
 		offsetY += windY;
@@ -334,7 +479,19 @@ var gameArea = {
 		} else if (offsetY >= tile_height) {
 			offsetY = 0;
 		}
-
+	},
+	poll_map: function() {
+		polling_counter += animation_time;
+		if (polling_counter >= polling_time) {
+			polling_counter = 0;
+			if (this.isLoggedIn()) {
+				fetch_map_and_refresh();
+			}
+		}
+	},
+	update: function() {
+		this.cycle_graphics();
+		this.poll_map();
 		this.draw_all();
 	},
 	init_timer: function () {
@@ -355,26 +512,30 @@ var gameArea = {
 			me.handle_key(e);
 		};
 		if (window.addEventListener) {
-			document.addEventListener(key_event, key_handler, false);
+			this.canvas.addEventListener(key_event, key_handler, false);
 		} else {
-			document.attachEvent("on" + key_event, key_handler);
+			this.canvas.attachEvent("on" + key_event, key_handler);
 		}
 	},
 	bind_mouse_events: function () {
 		var me = this;
-		var mouse_event = "click";
 		var mouse_handler = function (e) {
 			me.handle_mouse(e);
 		};
-		var reset_handler = function (e) {
-			me.handle_reset(e);
+		var wheel_handler = function (e) {
+			me.handle_mouse_wheel(e);
+		};
+		var begin_handler = function (e) {
+			me.handle_begin(e);
 		};
 		if (window.addEventListener) {
-			this.canvas.addEventListener(mouse_event, mouse_handler, false);
-			this.beginBtn.addEventListener(mouse_event, reset_handler, false);
+			this.canvas.addEventListener("click", mouse_handler, false);
+			this.canvas.addEventListener("wheel", wheel_handler, false);
+			this.beginBtn.addEventListener("click", begin_handler, false);
 		} else {
-			this.canvas.attachEvent("on" + mouse_event, mouse_handler);
-			this.beginBtn.attachEvent("on" + mouse_event, reset_handler);
+			this.canvas.attachEvent("onclick", mouse_handler);
+			this.canvas.attachEvent("wheel", wheel_handler);
+			this.beginBtn.attachEvent("onclick", begin_handler);
 		}
 	},
 	fix_pos: function() {
@@ -382,9 +543,8 @@ var gameArea = {
 		posY = fix_y(posY);
 	},
 	move_character: function(dy, dx) {
-		const kind = get_map_yx(fix_y(posY + dy), fix_x(posX + dx));
-		const terrain = find_terrain_by_kind(kind);
-		if (! is_blocking(terrain)) {
+		const kinds = get_map_yx(fix_y(posY + dy), fix_x(posX + dx));
+		if (! last_blocking(kinds)) {
 			posY += dy;
 			posX += dx;
 			this.fix_pos();
@@ -392,6 +552,12 @@ var gameArea = {
 
 		// Tell server about the move.
 		move_request(dy, dx);
+	},
+	take_item: function() {
+		take_request();
+	},
+	place_item: function() {
+		place_request();
 	},
 	handle_key: function (e) {
 		var key = this.get_key(e);
@@ -412,6 +578,12 @@ var gameArea = {
 			case 40: // down arrow
 				this.move_character(+1, +0);
 				break;
+			case 84: // T
+				this.take_item();
+				break;
+			case 80: // P
+				this.place_item();
+				break;
 			case 27: // escape key
 				break;
 			case 32: // space key
@@ -429,11 +601,35 @@ var gameArea = {
 		}
 		return 0;
 	},
+	get_canvas_coords: function(e) {
+		const rect = this.canvas.getBoundingClientRect();
+		const scaleX = this.canvas.width / rect.width;
+		const scaleY = this.canvas.height / rect.height;
+		const x = (e.clientX - rect.left) * scaleX;
+		const y = (e.clientY - rect.top) * scaleY;
+		return { y, x };
+	},
 	handle_mouse: function (e) {
-		console.log('Mouse click');
+		var yx = this.get_canvas_coords(e);
+		var y = parseInt(yx.y / tile_height);
+		var x = parseInt(yx.x / tile_width);
+		if ((y < 0) || (y > view_height)) {
+			return;
+		}
+		if ((x < 0) || (x > view_width)) {
+			return;
+		}
+		console.log('Mouse click y=' + y + ' x=' + x);
+		use_request(y - playerY, x - playerX);
+	},
+	handle_mouse_wheel: function (e) {
+		console.log('Mouse wheel deltaY=' + e.deltaY + ' deltaX=' + e.deltaX);
 	},
 	handle_reset: function (e) {
 		this.reset();
+	},
+	handle_begin: function (e) {
+		this.begin();
 	},
 	isIE: function () {
 		return this.browserTest(/IE/);
@@ -447,9 +643,39 @@ var gameArea = {
 	browserTest: function (rgx) {
 		return rgx.test(navigator.userAgent);
 	},
+	isLoggedIn() {
+		return session != ''
+	},
+	async login() {
+		this.reset();
+		// attempt to log in
+		var name = this.nameInput.value;
+		var password = this.passwordInput.value;
+		session = await fetch_login_session(name, password);
+		if (session != '') {
+			fetch_map_and_refresh();
+			this.beginBtn.innerText = 'Log out';
+		}
+	},
+	async logout() {
+		this.reset();
+		// attempt to log out
+		result = await fetch_logout(session);
+		if (result != null) {
+			session = "";
+			this.beginBtn.innerText = 'Begin Questing';
+		}
+	},
+	begin() {
+		if (this.isLoggedIn()) {
+			this.logout();
+		} else {
+			this.login();
+		}
+	},
 	reset: function() {
+		this.canvas.focus();
 		server_addr = this.server.value;
-		fetch_map_and_refresh();
 	},
 	start : function() {
 		this.canvas.width = default_width;
@@ -463,8 +689,8 @@ var gameArea = {
 };
 
 async function startGame() {
-	await load_all_terrain_tiles();
-	await load_all_player_tiles();
+	await load_all_tiles();
+	player_tile = find_tile_by_kind('1');
 	gameArea.start();
 }
 
