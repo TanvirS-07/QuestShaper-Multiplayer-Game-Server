@@ -35,8 +35,8 @@ public class InfoHandler implements HttpHandler {
         int requestedY = parseIntOrDefault(params.get("y"), -1);
         int requestedX = parseIntOrDefault(params.get("x"), -1);
 
-        int playerY = MoveHandler.getPlayerY();
-        int playerX = MoveHandler.getPlayerX();
+        int playerY = GameState.playerY;
+        int playerX = GameState.playerX;
 
         if (requestedY != playerY || requestedX != playerX) {
             sendResponse(exchange, 204, "");
@@ -89,21 +89,21 @@ public class InfoHandler implements HttpHandler {
     }
 
     private String getTileString(int y, int x) {
-        if (y < 0 || y >= MoveHandler.getMapHeight()) {
+        if (y < 0 || y >= GameState.mapHeight) {
             return " ";
         }
 
         int fixedX = x;
 
         if (fixedX < 0) {
-            fixedX += MoveHandler.getMapWidth();
+            fixedX += GameState.mapWidth;
         }
 
-        if (fixedX >= MoveHandler.getMapWidth()) {
-            fixedX -= MoveHandler.getMapWidth();
+        if (fixedX >= GameState.mapWidth) {
+            fixedX -= GameState.mapWidth;
         }
 
-        return String.valueOf(MoveHandler.getTile(y, fixedX));
+        return GameState.map[y][fixedX];
     }
 
     private int parseIntOrDefault(String value, int def) {

@@ -14,6 +14,7 @@ public class Main {
         server.createContext("/info", new InfoHandler());
         server.createContext("/login", new LoginHandler());
         server.createContext("/logout", new LogoutHandler());
+        server.createContext("/take", new TakeHandler());
 
         server.start();
         System.out.println("Server started on port 8000");
