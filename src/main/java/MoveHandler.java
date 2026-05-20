@@ -10,18 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MoveHandler implements HttpHandler{
-    private int playerX = 5;
-    private int playerY = 5;
+public class MoveHandler implements HttpHandler {
+    private static int playerX = 5;
+    private static int playerY = 5;
 
     private static char[][] map;
     private static int map_width;
     private static int map_height;
-    
 
     static {
         try {
-            map = loadMap("world.txt");
+            map = loadMap("maps/world.txt");
             map_height = map.length;
             map_width = map[0].length;
         } catch (IOException e) {
@@ -30,19 +29,32 @@ public class MoveHandler implements HttpHandler{
         }
     }
 
-    public void handle(HttpExchange exchange) throws IOException{
+    @Override
+    public void handle(HttpExchange exchange) throws IOException {
+        addCorsHeaders(exchange);
 
-        if (!exchange.getRequestMethod().equalsIgnoreCase("GET")){
+        if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+            sendResponse(exchange, 204, "");
+            return;
+        }
+
+        if (!exchange.getRequestMethod().equalsIgnoreCase("GET")) {
             sendResponse(exchange, 405, "");
-            return ;
+            return;
         }
 
         Map<String, String> params = parseQuery(exchange.getRequestURI());
 
+        String session = params.get("session");
+        if (!SessionManager.isValidSession(session)) {
+            sendResponse(exchange, 401, "");
+            return;
+        }
+
         int dy = parseIntOrDefault(params.get("dy"), 0);
         int dx = parseIntOrDefault(params.get("dx"), 0);
 
-        if(!isValidMove(dy, dx)) {
+        if (!isValidMove(dy, dx)) {
             sendResponse(exchange, 204, "");
             return;
         }
@@ -50,7 +62,7 @@ public class MoveHandler implements HttpHandler{
         int newX = warpX(playerX + dx);
         int newY = warpY(playerY + dy);
 
-        if(isBlocking(newY, newX)) {
+        if (isBlocking(newY, newX)) {
             sendResponse(exchange, 204, "");
             return;
         }
@@ -80,59 +92,59 @@ public class MoveHandler implements HttpHandler{
         return map;
     }
 
-    private boolean isValidMove(int dy, int dx){
+    private boolean isValidMove(int dy, int dx) {
         return Math.abs(dy) + Math.abs(dx) <= 1;
     }
 
-    private int warpX(int x){ 
-        if (x < 0){
+    private int warpX(int x) {
+        if (x < 0) {
             return x + map_width;
         }
-        if (x >= map_width){
+        if (x >= map_width) {
             return x - map_width;
         }
         return x;
     }
 
-    private int warpY(int y){
-        if(y < 0) {
+    private int warpY(int y) {
+        if (y < 0) {
             return 0;
         }
-        if(y >= map_height){
+        if (y >= map_height) {
             return map_height - 1;
         }
         return y;
     }
 
-    private boolean isBlocking(int y, int x){
+    private boolean isBlocking(int y, int x) {
         char tile = map[y][x];
-        if(tile == 'B' || tile == 'D' || tile == 'S' || tile == 'W'){
+        if (tile == 'B' || tile == 'D' || tile == 'S' || tile == 'W') {
             return true;
         } else {
             return false;
         }
     }
 
-    private int parseIntOrDefault(String value, int def){
+    private int parseIntOrDefault(String value, int def) {
         try {
             if (value == null) {
                 return def;
             } else {
                 return Integer.parseInt(value);
             }
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return def;
         }
     }
 
-    private Map<String, String> parseQuery(URI uri){
+    private Map<String, String> parseQuery(URI uri) {
         Map<String, String> result = new HashMap<>();
         String query = uri.getQuery();
 
-        if (query == null){
+        if (query == null) {
             return result;
         }
-        
+
         String[] pairs = query.split("&");
         for (String pair : pairs) {
             String[] parts = pair.split("=");
@@ -143,10 +155,43 @@ public class MoveHandler implements HttpHandler{
         return result;
     }
 
+    private void addCorsHeaders(HttpExchange exchange) {
+        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
+    }
+
+    public static int getPlayerX() {
+        return playerX;
+    }
+
+    public static int getPlayerY() {
+        return playerY;
+    }
+
+    public static int getMapWidth() {
+        return map_width;
+    }
+
+    public static int getMapHeight() {
+        return map_height;
+    }
+
+    public static char getTile(int y, int x) {
+        return map[y][x];
+    }
+
     private void sendResponse(HttpExchange exchange, int statusCode, String body) throws IOException {
-        exchange.sendResponseHeaders(statusCode, body.length());
+        if (statusCode == 204) {
+            exchange.sendResponseHeaders(204, -1);
+            exchange.close();
+            return;
+        }
+
+        byte[] bytes = body.getBytes();
+        exchange.sendResponseHeaders(statusCode, bytes.length);
         OutputStream os = exchange.getResponseBody();
-        os.write(body.getBytes());
+        os.write(bytes);
         os.close();
     }
 }
