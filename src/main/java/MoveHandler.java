@@ -184,6 +184,7 @@ public class MoveHandler implements HttpHandler {
     private void sendResponse(HttpExchange exchange, int statusCode, String body) throws IOException {
         if (statusCode == 204) {
             exchange.sendResponseHeaders(204, -1);
+            exchange.getResponseHeaders().add("Content-Type", "application/json");
             exchange.close();
             return;
         }
