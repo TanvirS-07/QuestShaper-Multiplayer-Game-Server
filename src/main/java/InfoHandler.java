@@ -1,6 +1,5 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -103,7 +102,13 @@ public class InfoHandler implements HttpHandler {
             fixedX -= GameState.mapWidth;
         }
 
-        return GameState.map[y][fixedX];
+        String tile = GameState.map[y][fixedX];
+
+        if (y == GameState.playerY && fixedX == GameState.playerX) {
+            return tile + "1";
+        }
+
+        return tile;
     }
 
     private int parseIntOrDefault(String value, int def) {

@@ -2,20 +2,26 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameState {
     public static int playerX = 5;
     public static int playerY = 5;
-
     public static String[][] map;
     public static int mapWidth;
     public static int mapHeight;
+    public static final Map<String, Character> inventory = new HashMap<>();
 
     static {
         try {
             map = loadMap("maps/world.txt");
             mapHeight = map.length;
             mapWidth = map[0].length;
+            addItem(2, 1, 'a');
+            addItem(0, 14, 'k');
+            addItem(16, 8, 'c');
+            addItem(13, 15, 'h');
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -39,5 +45,9 @@ public class GameState {
         }
 
         return loadedMap;
+    }
+
+    private static void addItem(int y, int x, char item) {
+        map[y][x] = map[y][x] + item;
     }
 }

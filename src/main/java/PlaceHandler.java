@@ -6,7 +6,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TakeHandler implements HttpHandler {
+public class PlaceHandler implements HttpHandler {
 
     @Override
     public synchronized void handle(HttpExchange exchange) throws IOException {
@@ -30,6 +30,14 @@ public class TakeHandler implements HttpHandler {
             return;
         }
 
+        String username = SessionManager.getUsername(session);
+        Character item = GameState.inventory.get(username);
+
+        if (item == null) {
+            sendResponse(exchange, 204, "");
+            return;
+        }
+
         if (GameState.playerY < 0 || GameState.playerY >= GameState.mapHeight ||
                 GameState.playerX < 0 || GameState.playerX >= GameState.mapWidth) {
             sendResponse(exchange, 204, "");
@@ -37,61 +45,26 @@ public class TakeHandler implements HttpHandler {
         }
 
         String tile = GameState.map[GameState.playerY][GameState.playerX];
-        Character item = firstMovableItem(tile);
 
-        if (item == null) {
+        if (containsMovableItem(tile)) {
             sendResponse(exchange, 204, "");
             return;
         }
 
-        String username = SessionManager.getUsername(session);
-        Character oldItem = GameState.inventory.get(username);
+        GameState.map[GameState.playerY][GameState.playerX] = tile + item;
+        GameState.inventory.remove(username);
 
-        GameState.map[GameState.playerY][GameState.playerX] = removeFirstItem(tile, item);
-
-        if (oldItem != null && itemClass(oldItem) == itemClass(item)) {
-            GameState.map[GameState.playerY][GameState.playerX] = GameState.map[GameState.playerY][GameState.playerX]
-                    + oldItem;
-        }
-
-        GameState.inventory.put(username, item);
         sendResponse(exchange, 200, "");
     }
 
-    private Character firstMovableItem(String tile) {
+    private boolean containsMovableItem(String tile) {
         for (int i = 0; i < tile.length(); i++) {
             char c = tile.charAt(i);
-            if (isMovableItem(c)) {
-                return c;
+            if (c == 'a' || c == 'c' || c == 'h' || c == 'k') {
+                return true;
             }
         }
-        return null;
-    }
-
-    private boolean isMovableItem(char c) {
-        return c == 'a' || c == 'c' || c == 'h' || c == 'k';
-    }
-
-    private char itemClass(char item) {
-        if (item == 'a') {
-            return 't'; // tool
-        }
-        if (item == 'c' || item == 'h') {
-            return 'd'; // drink
-        }
-        return 'r'; // artifact
-    }
-
-    private String removeFirstItem(String tile, char item) {
-        int index = tile.indexOf(item);
-        if (index == -1) {
-            return tile;
-        }
-        String updated = tile.substring(0, index) + tile.substring(index + 1);
-        if (updated.isEmpty()) {
-            return "g";
-        }
-        return updated;
+        return false;
     }
 
     private Map<String, String> parseQuery(URI uri) {
@@ -108,6 +81,7 @@ public class TakeHandler implements HttpHandler {
                 result.put(parts[0], parts[1]);
             }
         }
+
         return result;
     }
 
