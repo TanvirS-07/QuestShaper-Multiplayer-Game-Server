@@ -1,3 +1,12 @@
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
 public class UseHandler implements HttpHandler {
     private static final int VIEW_RADIUS = 5;
 
