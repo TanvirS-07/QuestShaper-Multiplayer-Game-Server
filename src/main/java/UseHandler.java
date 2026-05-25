@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UseHandler implements HttpHandler {
-    private static final int VIEW_RADIUS = 5;
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
@@ -33,9 +32,9 @@ public class UseHandler implements HttpHandler {
         }
 
         int dy = parseIntOrDefault(params.get("dy"), 0);
-        int dx = parseIntOrDefault(params.get("x"), 0);
+        int dx = parseIntOrDefault(params.get("dx"), 0);
 
-        if(!isValidUse(dY, dX)) {
+        if(!isValidUse(dy, dx)) {
             sendResponse(exchange, 204, "");
             return;
         }
@@ -121,7 +120,7 @@ public class UseHandler implements HttpHandler {
             return;
         }
         
-        byte[] bytes = body.getBytes();
+        byte[] bytes = response.getBytes();
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);
 
