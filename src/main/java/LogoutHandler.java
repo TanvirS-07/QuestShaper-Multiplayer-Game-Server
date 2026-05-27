@@ -57,6 +57,11 @@ public class LogoutHandler implements HttpHandler {
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String body) throws IOException {
+        if (statusCode == 204) {
+            exchange.sendResponseHeaders(204, -1);
+            exchange.close();
+            return;
+        }
         exchange.sendResponseHeaders(statusCode, body.length());
         OutputStream os = exchange.getResponseBody();
         os.write(body.getBytes());

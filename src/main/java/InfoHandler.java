@@ -52,11 +52,11 @@ public class InfoHandler implements HttpHandler {
         int bottom = playerY + VIEW_RADIUS;
         int right = playerX + VIEW_RADIUS;
 
-        String response = buildInfoJson(session, playerY, playerX, top, left, bottom, right);
+        String response = buildInfoJson(playerY, playerX, top, left, bottom, right);
         sendResponse(exchange, 200, response);
     }
 
-    private String buildInfoJson(String session, int y, int x, int top, int left, int bottom, int right) {
+    private String buildInfoJson(int y, int x, int top, int left, int bottom, int right) {
         StringBuilder json = new StringBuilder();
 
         json.append("{");
@@ -80,7 +80,7 @@ public class InfoHandler implements HttpHandler {
                     json.append(",");
                 }
 
-                json.append("\"").append(getTileString(session, row, col)).append("\"");
+                json.append("\"").append(getTileString(row, col)).append("\"");
             }
 
             json.append("]");
@@ -92,7 +92,7 @@ public class InfoHandler implements HttpHandler {
         return json.toString();
     }
 
-    private String getTileString(String session, int y, int x) {
+    private String getTileString(int y, int x) {
         if (y < 0 || y >= GameState.mapHeight) {
             return " ";
         }
