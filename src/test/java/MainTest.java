@@ -20,9 +20,6 @@ public class MainTest {
     private static String tanvirSession;
     private static String shaifSession;
 
-    // -------------------------------------------------------------------------
-    // Setup / Teardown
-    // -------------------------------------------------------------------------
 
     @BeforeAll
     static void startServer() throws Exception {
@@ -44,9 +41,6 @@ public class MainTest {
         server.stop(0);
     }
 
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
 
     private String sha256(String input) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
