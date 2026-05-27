@@ -29,6 +29,11 @@ public class MoveHandler implements HttpHandler {
             sendResponse(exchange, 401, "");
             return;
         }
+        PlayerState player = GameState.getPlayer(session);
+        if (player == null) {
+            sendResponse(exchange, 401, "");
+            return;
+        }
 
         int dy = parseIntOrDefault(params.get("dy"), 0);
         int dx = parseIntOrDefault(params.get("dx"), 0);
@@ -38,18 +43,22 @@ public class MoveHandler implements HttpHandler {
             return;
         }
 
-        int newX = warpX(GameState.playerX + dx);
-        int newY = warpY(GameState.playerY + dy);
+        int newX = warpX(player.x + dx);
+        int newY = warpY(player.y + dy);
 
         if (isBlocking(newY, newX)) {
             sendResponse(exchange, 204, "");
             return;
         }
+        if ((dy != 0 || dx != 0) && GameState.isOccupiedByOtherPlayer(newY, newX, session)) {
+            sendResponse(exchange, 204, "");
+            return;
+        }
 
-        GameState.playerX = newX;
-        GameState.playerY = newY;
+        player.x = newX;
+        player.y = newY;
 
-        String response = String.format("{\"y\": %d, \"x\": %d}", GameState.playerY, GameState.playerX);
+        String response = String.format("{\"y\": %d, \"x\": %d}", player.y, player.x);
         sendResponse(exchange, 200, response);
     }
 

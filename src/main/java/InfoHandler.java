@@ -30,12 +30,17 @@ public class InfoHandler implements HttpHandler {
             sendResponse(exchange, 401, "");
             return;
         }
+        PlayerState player = GameState.getPlayer(session);
+        if (player == null) {
+            sendResponse(exchange, 401, "");
+            return;
+        }
 
         int requestedY = parseIntOrDefault(params.get("y"), -1);
         int requestedX = parseIntOrDefault(params.get("x"), -1);
 
-        int playerY = GameState.playerY;
-        int playerX = GameState.playerX;
+        int playerY = player.y;
+        int playerX = player.x;
 
         if (requestedY != playerY || requestedX != playerX) {
             sendResponse(exchange, 204, "");
@@ -47,11 +52,11 @@ public class InfoHandler implements HttpHandler {
         int bottom = playerY + VIEW_RADIUS;
         int right = playerX + VIEW_RADIUS;
 
-        String response = buildInfoJson(playerY, playerX, top, left, bottom, right);
+        String response = buildInfoJson(session, playerY, playerX, top, left, bottom, right);
         sendResponse(exchange, 200, response);
     }
 
-    private String buildInfoJson(int y, int x, int top, int left, int bottom, int right) {
+    private String buildInfoJson(String session, int y, int x, int top, int left, int bottom, int right) {
         StringBuilder json = new StringBuilder();
 
         json.append("{");
@@ -75,7 +80,7 @@ public class InfoHandler implements HttpHandler {
                     json.append(",");
                 }
 
-                json.append("\"").append(getTileString(row, col)).append("\"");
+                json.append("\"").append(getTileString(session, row, col)).append("\"");
             }
 
             json.append("]");
@@ -87,7 +92,7 @@ public class InfoHandler implements HttpHandler {
         return json.toString();
     }
 
-    private String getTileString(int y, int x) {
+    private String getTileString(String session, int y, int x) {
         if (y < 0 || y >= GameState.mapHeight) {
             return " ";
         }
@@ -102,13 +107,7 @@ public class InfoHandler implements HttpHandler {
             fixedX -= GameState.mapWidth;
         }
 
-        String tile = GameState.map[y][fixedX];
-
-        if (y == GameState.playerY && fixedX == GameState.playerX) {
-            return tile + "1";
-        }
-
-        return tile;
+        return GameState.getTileWithPlayers(y, fixedX);
     }
 
     private int parseIntOrDefault(String value, int def) {

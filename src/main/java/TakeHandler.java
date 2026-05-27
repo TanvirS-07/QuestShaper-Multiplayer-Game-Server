@@ -29,14 +29,19 @@ public class TakeHandler implements HttpHandler {
             sendResponse(exchange, 401, "");
             return;
         }
+        PlayerState player = GameState.getPlayer(session);
+        if (player == null) {
+            sendResponse(exchange, 401, "");
+            return;
+        }
 
-        if (GameState.playerY < 0 || GameState.playerY >= GameState.mapHeight ||
-                GameState.playerX < 0 || GameState.playerX >= GameState.mapWidth) {
+        if (player.y < 0 || player.y >= GameState.mapHeight ||
+                player.x < 0 || player.x >= GameState.mapWidth) {
             sendResponse(exchange, 204, "");
             return;
         }
 
-        String tile = GameState.map[GameState.playerY][GameState.playerX];
+        String tile = GameState.map[player.y][player.x];
         Character item = firstMovableItem(tile);
 
         if (item == null) {
@@ -44,17 +49,15 @@ public class TakeHandler implements HttpHandler {
             return;
         }
 
-        String username = SessionManager.getUsername(session);
-        Character oldItem = GameState.inventory.get(username);
+        Character oldItem = player.inventory;
 
-        GameState.map[GameState.playerY][GameState.playerX] = removeFirstItem(tile, item);
+        GameState.map[player.y][player.x] = removeFirstItem(tile, item);
 
         if (oldItem != null && itemClass(oldItem) == itemClass(item)) {
-            GameState.map[GameState.playerY][GameState.playerX] = GameState.map[GameState.playerY][GameState.playerX]
-                    + oldItem;
+            GameState.map[player.y][player.x] = GameState.map[player.y][player.x] + oldItem;
         }
 
-        GameState.inventory.put(username, item);
+        player.inventory = item;
         sendResponse(exchange, 200, "");
     }
 

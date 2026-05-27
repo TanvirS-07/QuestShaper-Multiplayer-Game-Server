@@ -30,17 +30,22 @@ public class UseHandler implements HttpHandler {
             sendResponse(exchange, 401, "");
             return;
         }
+        PlayerState player = GameState.getPlayer(session);
+        if (player == null) {
+            sendResponse(exchange, 401, "");
+            return;
+        }
 
         int dy = parseIntOrDefault(params.get("dy"), 0);
         int dx = parseIntOrDefault(params.get("dx"), 0);
 
-        if(!isValidUse(dy, dx)) {
+        if (!isValidUse(dy, dx)) {
             sendResponse(exchange, 204, "");
             return;
         }
 
-        int targetY = GameState.playerY + dy;
-        int targetX = warpX(GameState.playerX + dx);
+        int targetY = player.y + dy;
+        int targetX = warpX(player.x + dx);
 
         if (targetY < 0 || targetY >= GameState.mapHeight) {
             sendResponse(exchange, 204, "");
@@ -49,13 +54,13 @@ public class UseHandler implements HttpHandler {
 
         String tile = GameState.map[targetY][targetX];
 
-        if(tile.contains("D")) {
+        if (tile.contains("D")) {
             GameState.map[targetY][targetX] = tile.replaceFirst("D", "d");
             sendResponse(exchange, 200, "");
             return;
         }
 
-        if(tile.contains("d")) {
+        if (tile.contains("d")) {
             GameState.map[targetY][targetX] = tile.replaceFirst("d", "D");
             sendResponse(exchange, 200, "");
             return;
@@ -65,7 +70,7 @@ public class UseHandler implements HttpHandler {
     }
 
     private boolean isValidUse(int dy, int dx) {
-        return Math.abs(dy) +Math.abs(dx) <= 1;
+        return Math.abs(dy) + Math.abs(dx) <= 1;
     }
 
     private int warpX(int x) {
@@ -96,7 +101,7 @@ public class UseHandler implements HttpHandler {
         if (query == null) {
             return result;
         }
-        
+
         String[] pairs = query.split("&");
         for (String pair : pairs) {
             String[] parts = pair.split("=", 2);
@@ -114,12 +119,12 @@ public class UseHandler implements HttpHandler {
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-        if(statusCode == 204) {
+        if (statusCode == 204) {
             exchange.sendResponseHeaders(204, -1);
             exchange.close();
             return;
         }
-        
+
         byte[] bytes = response.getBytes();
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, bytes.length);

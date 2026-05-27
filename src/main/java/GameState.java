@@ -12,6 +12,8 @@ public class GameState {
     public static int mapWidth;
     public static int mapHeight;
     public static final Map<String, Character> inventory = new HashMap<>();
+    public static final Map<String, PlayerState> players = new HashMap<>();
+    private static int nextSpriteIndex = 1;
 
     static {
         try {
@@ -50,4 +52,49 @@ public class GameState {
     private static void addItem(int y, int x, char item) {
         map[y][x] = map[y][x] + item;
     }
+
+    public static synchronized PlayerState addPlayer(String session, String username) {
+        PlayerState existing = players.get(session);
+        if (existing != null) {
+            return existing;
+        }
+
+        char sprite = (char) ('0' + (nextSpriteIndex % 10));
+        nextSpriteIndex++;
+
+        PlayerState player = new PlayerState(session, username, 5, 5, sprite);
+        players.put(session, player);
+        return player;
+    }
+
+    public static synchronized PlayerState getPlayer(String session) {
+        return players.get(session);
+    }
+
+    public static synchronized void removePlayer(String session) {
+        players.remove(session);
+    }
+
+    public static synchronized boolean isOccupiedByOtherPlayer(int y, int x, String session) {
+        for (PlayerState player : players.values()) {
+            if (!player.session.equals(session) && player.y == y && player.x == x) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static synchronized String getTileWithPlayers(int y, int x) {
+        String tile = map[y][x];
+
+        for (PlayerState player : players.values()) {
+            if (player.y == y && player.x == x) {
+                tile = tile + player.sprite;
+            }
+        }
+
+        return tile;
+    }
+
 }

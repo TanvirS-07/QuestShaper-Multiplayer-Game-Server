@@ -29,30 +29,34 @@ public class PlaceHandler implements HttpHandler {
             sendResponse(exchange, 401, "");
             return;
         }
+        PlayerState player = GameState.getPlayer(session);
+        if (player == null) {
+            sendResponse(exchange, 401, "");
+            return;
+        }
 
-        String username = SessionManager.getUsername(session);
-        Character item = GameState.inventory.get(username);
+        Character item = player.inventory;
 
         if (item == null) {
             sendResponse(exchange, 204, "");
             return;
         }
 
-        if (GameState.playerY < 0 || GameState.playerY >= GameState.mapHeight ||
-                GameState.playerX < 0 || GameState.playerX >= GameState.mapWidth) {
+        if (player.y < 0 || player.y >= GameState.mapHeight ||
+                player.x < 0 || player.x >= GameState.mapWidth) {
             sendResponse(exchange, 204, "");
             return;
         }
 
-        String tile = GameState.map[GameState.playerY][GameState.playerX];
+        String tile = GameState.map[player.y][player.x];
 
         if (containsMovableItem(tile)) {
             sendResponse(exchange, 204, "");
             return;
         }
 
-        GameState.map[GameState.playerY][GameState.playerX] = tile + item;
-        GameState.inventory.remove(username);
+        GameState.map[player.y][player.x] = tile + item;
+        player.inventory = null;
 
         sendResponse(exchange, 200, "");
     }
