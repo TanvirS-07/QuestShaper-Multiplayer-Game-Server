@@ -28,6 +28,16 @@ public class LoginHandler implements HttpHandler {
             return;
         }
 
+        if (name.isBlank() || encpswrd.isBlank()) {
+            sendResponse(exchange, 400, "");
+            return;
+        }
+
+        if (!name.matches("[A-Za-z-]+")) {
+            sendResponse(exchange, 400, "");
+            return;
+        }
+
         if (!SessionManager.validateLogin(name, encpswrd)) {
             sendResponse(exchange, 401, "");
             return;
