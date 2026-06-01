@@ -21,4 +21,6 @@ jobs:
           java-version: '18'
 
       - name: Build and run tests
+        env:
+          USERS: Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123
         run: mvn test

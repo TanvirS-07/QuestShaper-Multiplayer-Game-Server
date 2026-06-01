@@ -53,7 +53,7 @@ public class TakeHandler implements HttpHandler {
 
         GameState.map[player.y][player.x] = removeFirstItem(tile, item);
 
-        if (oldItem != null && itemClass(oldItem) == itemClass(item)) {
+        if (oldItem != null) {
             GameState.map[player.y][player.x] = GameState.map[player.y][player.x] + oldItem;
         }
 
