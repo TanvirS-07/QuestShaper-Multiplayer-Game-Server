@@ -6,12 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameState {
-    public static int playerX = 5;
-    public static int playerY = 5;
     public static String[][] map;
     public static int mapWidth;
     public static int mapHeight;
-    public static final Map<String, Character> inventory = new HashMap<>();
     public static final Map<String, PlayerState> players = new HashMap<>();
     private static int nextSpriteIndex = 1;
 
