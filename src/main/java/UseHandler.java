@@ -54,6 +54,18 @@ public class UseHandler implements HttpHandler {
 
         String tile = GameState.map[targetY][targetX];
 
+        boolean isDoor = tile.contains("D") || tile.contains("d");
+
+        if (!isDoor) {
+            sendResponse(exchange, 204, "");
+            return;
+        }
+
+        if (player.inventory == null || player.inventory.charValue() != 'k') {
+            sendResponse(exchange, 204, "");
+            return;
+        }
+
         if (tile.contains("D")) {
             GameState.map[targetY][targetX] = tile.replaceFirst("D", "d");
             sendResponse(exchange, 200, "");
