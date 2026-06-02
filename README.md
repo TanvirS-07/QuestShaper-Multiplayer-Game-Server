@@ -51,7 +51,7 @@ Set the allowed users:
 $env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123"
 ```
 
-Compile the Java source files and start the file:
+Compile the Java source files and start the server:
 ```powershell
 javac -d out (Get-ChildItem src\main\java\*.java | ForEach-Object FullName)
 java -cp out Main
@@ -60,7 +60,43 @@ java -cp out Main
 If successful, the terminal should show: Server started on port 8000
 
 ## Running with Docker
-TODO
+
+Build the Docker image:
+```powershell
+docker build -t questshaper-server .
+```
+
+Run the container locally:
+```powershell
+docker run -p 8000:8000 -e USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123" questshaper-server
+```
+
+The server will be available at:
+http://localhost:8000
+
+## Cloud Deployment
+
+The project is deployed to an AWS EC2 instance using Terraform and GitHub Actions.
+
+Terraform is used to create the AWS infrastructure, including:
+- an EC2 instance
+- a security group allowing SSH and server traffic on port 8000
+- Docker installation on the EC2 instance
+
+GitHub Actions is used to:
+- run the Maven test suite
+- build the Docker image
+- push the image to Docker Hub
+- connect to EC2 using SSH
+- restart the Docker container with the latest image
+
+The deployed server can be tested with:
+
+```powershell
+Invoke-WebRequest -UseBasicParsing "http://3.27.164.225:8000/move?dy=0&dx=0&session=fake"
+```
+
+A successful deployment should return HTTP 401 Unauthorized, because the server is running and correctly rejecting an invalid session.
 
 ## Running Tests
 
@@ -68,6 +104,8 @@ Run the automated JUnit tests with Maven:
 ```powershell
 mvn test
 ```
+
+The GitHub Actions workflow also runs these tests automatically on pushes and pull requests to `main`.
 
 ## API Endpoints
 
@@ -145,10 +183,10 @@ This API Endpoint will use the player's held item or interact with a nearby tile
 - Successful use returns HTTP 200 code.
 - Invalid use actions return HTTP 204.
 - Invalid sessions return HTTP 401.
-- Current supported interaction: using a key on a closed door changes it from `D` to `d`.
+- Current supported interaction: using a key on a door toggles it between closed `D` and open `d`.
 
 
-## Map Format (Unfinished)
+## Map Format
 
 The map is stored in:
 
@@ -202,8 +240,12 @@ COMP3050-Project/
 │       └── MainTest.java
 ├── maps/
 │   └── world.txt
+├── infra/
+│   ├── main.tf
+│   └── terraform.tfvars.example
 ├── .github/workflows/
-│   └── ci.yml
+│   ├── ci.yml
+│   └── deploy.yml
 ├── Dockerfile
 ├── pom.xml
 └── README.md
@@ -225,7 +267,7 @@ http://localhost:8000
 - Created the GitHub repository
 - Set up the Java HTTP server skeleton from week1 workshop files
 - Added the project folder structure
-- Using workshop files setup the follow:
+- Using workshop material set up:
 - Initial `README.md`
 - Base `Dockerfile`
 - Maven `pom.xml`
