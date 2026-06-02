@@ -327,6 +327,26 @@ For the deployed AWS server, connect the client to:
 http://13.238.198.125:8000
 ```
 
+If the official QuestShaper website blocks the deployed HTTP server because the website uses HTTPS, run the local copy of the client over HTTP instead:
+
+```powershell
+python -m http.server 5500
+```
+
+Then open:
+
+```text
+http://localhost:5500
+```
+
+Use the AWS server address in the local client:
+
+```text
+http://13.238.198.125:8000
+```
+
+This means the browser client is running locally, but all game API requests are still being sent to the deployed AWS server.
+
 ## Development Plan
 
 ### Phase 1 - Setup
