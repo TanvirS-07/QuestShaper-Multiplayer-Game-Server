@@ -75,16 +75,6 @@ public class TakeHandler implements HttpHandler {
         return c == 'a' || c == 'c' || c == 'h' || c == 'k';
     }
 
-    private char itemClass(char item) {
-        if (item == 'a') {
-            return 't'; // tool
-        }
-        if (item == 'c' || item == 'h') {
-            return 'd'; // drink
-        }
-        return 'r'; // artifact
-    }
-
     private String removeFirstItem(String tile, char item) {
         int index = tile.indexOf(item);
         if (index == -1) {

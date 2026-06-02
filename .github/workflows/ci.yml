@@ -24,3 +24,6 @@ jobs:
         env:
           USERS: Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123
         run: mvn test
+
+      - name: Build Docker image
+        run: docker build -t questshaper-server .

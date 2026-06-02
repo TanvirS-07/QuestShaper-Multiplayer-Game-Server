@@ -1,11 +1,12 @@
-FROM maven:3.9-eclipse-temurin-18
+FROM eclipse-temurin:18-jdk
 
 WORKDIR /app
 
-COPY . .
+COPY src/main/java/ ./
+COPY maps/ ./maps/
 
-RUN mvn clean package -DskipTests
+RUN javac *.java
 
 EXPOSE 8000
 
-CMD ["mvn", "exec:java", "-Dexec.mainClass=Main"]
+CMD ["java", "Main"]
