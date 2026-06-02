@@ -80,4 +80,13 @@ public class SessionManager {
             throw new RuntimeException(e);
         }
     }
+
+    public static String getSessionForUsername(String username) {
+        for (Map.Entry<String, String> entry : session.entrySet()) {
+            if (entry.getValue().equals(username)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 }

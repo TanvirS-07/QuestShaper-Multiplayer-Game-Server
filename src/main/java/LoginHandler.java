@@ -43,6 +43,12 @@ public class LoginHandler implements HttpHandler {
             return;
         }
 
+        String oldSession = SessionManager.getSessionForUsername(name);
+        if (oldSession != null) {
+            SessionManager.logout(oldSession);
+            GameState.removePlayer(oldSession);
+        }
+
         String session = SessionManager.createSession(name);
         GameState.addPlayer(session, name);
 
