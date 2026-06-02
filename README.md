@@ -139,9 +139,10 @@ export USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123"
 mvn clean test
 ```
 
-Run the automated JUnit tests with Maven:
+If running locally, run the automated JUnit tests with by declaring USERS and then using Maven:
 
 ```powershell
+$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123"
 mvn test
 ```
 
