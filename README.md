@@ -39,7 +39,7 @@ username:password
 
 Multiple users are separated with commas:
 ```powershell
-$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123"
+$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123"
 ```
 
 ## Running the Project Locally
@@ -48,7 +48,7 @@ Open a PowerShell terminal in the project folder.
 
 Set the allowed users:
 ```powershell
-$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123"
+$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123"
 ```
 
 Compile the Java source files and start the server:

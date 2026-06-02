@@ -51,4 +51,4 @@ jobs:
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/questshaper-server:latest
             docker stop questshaper-server || true
             docker rm questshaper-server || true
-            docker run -d --name questshaper-server -p 8000:8000 -e USERS="${{ secrets.SERVER_USERS }}" ${{ secrets.DOCKERHUB_USERNAME }}/questshaper-server:latest
+            docker run -d --restart unless-stopped --name questshaper-server -p 8000:8000 -e USERS="${{ secrets.SERVER_USERS }}" ${{ secrets.DOCKERHUB_USERNAME }}/questshaper-server:latest
