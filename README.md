@@ -132,6 +132,13 @@ A successful deployment should return HTTP `401 Unauthorized`, because the serve
 
 ## Running Tests
 
+When running in a Docker Container, use the following command:
+
+```powershell
+export USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123"
+mvn clean test
+```
+
 Run the automated JUnit tests with Maven:
 
 ```powershell
@@ -293,7 +300,13 @@ COMP3050-Project/
 |   |   +-- PlaceHandler.java
 |   |   +-- UseHandler.java
 |   +-- test/java/
-|       +-- MainTest.java
+|       +-- InfoTest.java
+|       +-- LoginTest.java
+|       +-- LogoutTest.java
+|       +-- MoveTest.java
+|       +-- PlaceTest.java
+|       +-- TakeTest.java
+|       +-- UseTest.java
 +-- maps/
 |   +-- world.txt
 +-- infra/
