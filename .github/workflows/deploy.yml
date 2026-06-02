@@ -12,6 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up JDK 18
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '18'
+
       - name: Build and run tests
         env:
           USERS: Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123
