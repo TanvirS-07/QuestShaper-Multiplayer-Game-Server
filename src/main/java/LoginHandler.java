@@ -43,6 +43,8 @@ public class LoginHandler implements HttpHandler {
             return;
         }
 
+        // A username can only have one active player. A fresh login replaces any old
+        // session.
         String oldSession = SessionManager.getSessionForUsername(name);
         if (oldSession != null) {
             SessionManager.logout(oldSession);
@@ -57,6 +59,7 @@ public class LoginHandler implements HttpHandler {
     }
 
     private String readBody(InputStream input) throws IOException {
+        // Login data is sent as the JSON request body.
         return new String(input.readAllBytes());
     }
 

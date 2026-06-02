@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SessionManager {
+    // Active sessions are kept in memory and map session tokens to usernames.
     private static final Map<String, String> session = new HashMap<>();
     private static final SecureRandom random = new SecureRandom();
 
     public static boolean validateLogin(String name, String encpswrd) {
+        // USERS keeps credentials out of source code and allows
+        // deployment-specific logins.
         String users = System.getenv("USERS");
 
         if (users == null || users.isBlank()) {
@@ -54,6 +57,7 @@ public class SessionManager {
     }
 
     private static String generateToken() {
+        // 32 random bytes become a 64-character hexadecimal session token.
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);
 
@@ -66,6 +70,7 @@ public class SessionManager {
     }
 
     private static String hashPassword(String input) {
+        // API compares the SHA-256 hash of "name;password".
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes());
@@ -82,6 +87,7 @@ public class SessionManager {
     }
 
     public static String getSessionForUsername(String username) {
+        // Used on login to replace sessions for the same username.
         for (Map.Entry<String, String> entry : session.entrySet()) {
             if (entry.getValue().equals(username)) {
                 return entry.getKey();

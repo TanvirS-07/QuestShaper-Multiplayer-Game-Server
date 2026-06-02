@@ -53,6 +53,7 @@ public class TakeHandler implements HttpHandler {
 
         GameState.map[player.y][player.x] = removeFirstItem(tile, item);
 
+        // Inventory has one slot; taking another item drops the old item onto the same tile.
         if (oldItem != null) {
             GameState.map[player.y][player.x] = GameState.map[player.y][player.x] + oldItem;
         }
@@ -62,6 +63,7 @@ public class TakeHandler implements HttpHandler {
     }
 
     private Character firstMovableItem(String tile) {
+        // Find the first item symbol on a stacked tile string.
         for (int i = 0; i < tile.length(); i++) {
             char c = tile.charAt(i);
             if (isMovableItem(c)) {
@@ -76,6 +78,7 @@ public class TakeHandler implements HttpHandler {
     }
 
     private String removeFirstItem(String tile, char item) {
+        // Remove only the picked-up item, leaving the base tile and other layers.
         int index = tile.indexOf(item);
         if (index == -1) {
             return tile;
@@ -88,6 +91,7 @@ public class TakeHandler implements HttpHandler {
     }
 
     private Map<String, String> parseQuery(URI uri) {
+        // TAKE only needs the session token from the query string.
         Map<String, String> result = new HashMap<>();
         String query = uri.getQuery();
 

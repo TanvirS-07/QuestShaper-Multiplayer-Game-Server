@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
+        // Register each API endpoint with its handler.
         server.createContext("/move", new MoveHandler());
         server.createContext("/info", new InfoHandler());
         server.createContext("/login", new LoginHandler());

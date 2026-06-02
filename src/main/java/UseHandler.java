@@ -61,6 +61,7 @@ public class UseHandler implements HttpHandler {
             return;
         }
 
+        // This map treats doors as locked interactions that require the key.
         if (player.inventory == null || player.inventory.charValue() != 'k') {
             sendResponse(exchange, 204, "");
             return;
@@ -82,10 +83,12 @@ public class UseHandler implements HttpHandler {
     }
 
     private boolean isValidUse(int dy, int dx) {
+        // USE can target the current tile or an adjacent tile.
         return Math.abs(dy) + Math.abs(dx) <= 1;
     }
 
     private int warpX(int x) {
+        // Keep horizontal targeting consistent with movement and info.
         if (x < 0) {
             return x + GameState.mapWidth;
         }
@@ -107,6 +110,7 @@ public class UseHandler implements HttpHandler {
     }
 
     private Map<String, String> parseQuery(URI uri) {
+        // Read dy, dx, and session from the URL query string.
         Map<String, String> result = new HashMap<>();
         String query = uri.getQuery();
 

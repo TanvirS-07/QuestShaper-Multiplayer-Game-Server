@@ -38,6 +38,7 @@ public class MoveHandler implements HttpHandler {
         int dy = parseIntOrDefault(params.get("dy"), 0);
         int dx = parseIntOrDefault(params.get("dx"), 0);
 
+        // API allows only one step, or dy=0&dx=0 to stay in place.
         if (!isValidMove(dy, dx)) {
             sendResponse(exchange, 204, "");
             return;
@@ -67,6 +68,7 @@ public class MoveHandler implements HttpHandler {
     }
 
     private int warpX(int x) {
+        // The supplied client treats the map as wrapping horizontally.
         if (x < 0) {
             return x + GameState.mapWidth;
         }
@@ -77,6 +79,8 @@ public class MoveHandler implements HttpHandler {
     }
 
     private int warpY(int y) {
+        // Vertical movement is restricted so players cannot leave the top or bottom
+        // edge.
         if (y < 0) {
             return 0;
         }
@@ -87,6 +91,7 @@ public class MoveHandler implements HttpHandler {
     }
 
     private boolean isBlocking(int y, int x) {
+        // Uppercase map symbols here are blocking tiles according to the API spec.
         String tile = GameState.map[y][x];
         return tile.contains("B") || tile.contains("D") || tile.contains("S") || tile.contains("W");
     }
@@ -104,6 +109,7 @@ public class MoveHandler implements HttpHandler {
     }
 
     private Map<String, String> parseQuery(URI uri) {
+        // Read dy, dx, and session from the URL query string.
         Map<String, String> result = new HashMap<>();
         String query = uri.getQuery();
 

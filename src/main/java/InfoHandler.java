@@ -39,6 +39,7 @@ public class InfoHandler implements HttpHandler {
         int requestedY = parseIntOrDefault(params.get("y"), -1);
         int requestedX = parseIntOrDefault(params.get("x"), -1);
 
+        // INFO only reveals the view around the requesting player's current location.
         int playerY = player.y;
         int playerX = player.x;
 
@@ -57,6 +58,7 @@ public class InfoHandler implements HttpHandler {
     }
 
     private String buildInfoJson(int y, int x, int top, int left, int bottom, int right) {
+        // Build the 11x11 JSON view expected by the QuestShaper client.
         StringBuilder json = new StringBuilder();
 
         json.append("{");
@@ -97,6 +99,7 @@ public class InfoHandler implements HttpHandler {
             return " ";
         }
 
+        // Match movement behavior by wrapping the visible window horizontally.
         int fixedX = x;
 
         if (fixedX < 0) {
@@ -123,6 +126,7 @@ public class InfoHandler implements HttpHandler {
     }
 
     private Map<String, String> parseQuery(URI uri) {
+        // Read y, x, and session from the URL query string.
         Map<String, String> result = new HashMap<>();
         String query = uri.getQuery();
 

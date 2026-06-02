@@ -29,11 +29,13 @@ public class LogoutHandler implements HttpHandler {
             return;
         }
 
+        // Remove both the session token and the player's visible map state.
         GameState.removePlayer(session);
         sendResponse(exchange, 200, "");
     }
 
     private Map<String, String> parseQuery(URI uri) {
+        // Convert query parameters such as session=abc into a simple map.
         Map<String, String> map = new HashMap<>();
         String query = uri.getQuery();
 

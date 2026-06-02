@@ -50,6 +50,7 @@ public class PlaceHandler implements HttpHandler {
 
         String tile = GameState.map[player.y][player.x];
 
+        // Keep placement simple: one movable item per tile.
         if (containsMovableItem(tile)) {
             sendResponse(exchange, 204, "");
             return;
@@ -62,6 +63,7 @@ public class PlaceHandler implements HttpHandler {
     }
 
     private boolean containsMovableItem(String tile) {
+        // Prevent stacking two movable inventory items on the same map tile.
         for (int i = 0; i < tile.length(); i++) {
             char c = tile.charAt(i);
             if (c == 'a' || c == 'c' || c == 'h' || c == 'k') {
@@ -72,6 +74,7 @@ public class PlaceHandler implements HttpHandler {
     }
 
     private Map<String, String> parseQuery(URI uri) {
+        // PLACE only needs the session token from the query string.
         Map<String, String> result = new HashMap<>();
         String query = uri.getQuery();
 

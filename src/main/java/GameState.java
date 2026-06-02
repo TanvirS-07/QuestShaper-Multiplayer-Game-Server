@@ -17,6 +17,8 @@ public class GameState {
             map = loadMap("maps/world.txt");
             mapHeight = map.length;
             mapWidth = map[0].length;
+
+            // Movable items are loaded onto the map after world.txt is loaded.
             addItem(2, 1, 'a');
             addItem(0, 14, 'k');
             addItem(16, 8, 'c');
@@ -28,6 +30,7 @@ public class GameState {
     }
 
     private static String[][] loadMap(String filename) throws IOException {
+        // Convert each character from world.txt into a tile string.
         List<String> lines = Files.readAllLines(Paths.get(filename));
 
         int height = lines.size();
@@ -47,6 +50,7 @@ public class GameState {
     }
 
     private static void addItem(int y, int x, char item) {
+        // Items are stored by appending their symbol to the base tile string.
         map[y][x] = map[y][x] + item;
     }
 
@@ -56,6 +60,7 @@ public class GameState {
             return existing;
         }
 
+        // QuestShaper uses digits 0-9 as player sprites.
         char sprite = (char) ('0' + (nextSpriteIndex % 10));
         nextSpriteIndex++;
 
@@ -85,6 +90,8 @@ public class GameState {
     public static synchronized String getTileWithPlayers(int y, int x) {
         String tile = map[y][x];
 
+        // Player digits are appended last so the client draws avatars above
+        // tiles/items.
         for (PlayerState player : players.values()) {
             if (player.y == y && player.x == x) {
                 tile = tile + player.sprite;
