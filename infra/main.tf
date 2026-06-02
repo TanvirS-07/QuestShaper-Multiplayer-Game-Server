@@ -67,6 +67,19 @@ resource "aws_instance" "questshaper" {
   }
 }
 
+resource "aws_eip" "questshaper" {
+  domain = "vpc"
+
+  tags = {
+    Name = "COMP3050-QuestShaper-Elastic-IP"
+  }
+}
+
+resource "aws_eip_association" "questshaper" {
+  instance_id   = aws_instance.questshaper.id
+  allocation_id = aws_eip.questshaper.id
+}
+
 output "instance_public_ip" {
-  value = aws_instance.questshaper.public_ip
+  value = aws_eip.questshaper.public_ip
 }

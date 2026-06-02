@@ -93,7 +93,7 @@ GitHub Actions is used to:
 The deployed server can be tested with:
 
 ```powershell
-Invoke-WebRequest -UseBasicParsing "http://3.27.164.225:8000/move?dy=0&dx=0&session=fake"
+Invoke-WebRequest -UseBasicParsing "http://13.238.198.125:8000/move?dy=0&dx=0&session=fake"
 ```
 
 A successful deployment should return HTTP 401 Unauthorized, because the server is running and correctly rejecting an invalid session.
