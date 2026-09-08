@@ -35,7 +35,7 @@ Designed for scalable cloud infrastructure, containerised with **Docker**, and a
                                                                   |
                                                          Deployed on AWS EC2
                                                          Provisioned via Terraform
-
+```
 ## Authentication
 
 The server uses a `USERS` environment variable to define valid users.
