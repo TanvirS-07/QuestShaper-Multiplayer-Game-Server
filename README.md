@@ -1,36 +1,40 @@
-# COMP3050 Project - 2D Tile-Based Virtual Server
+# QuestShaper — Containerised Multiplayer Game Server
 
 ## The project overview
 
 The project implements a Java HTTP server for a 2D tile-based adventure game running through QuestShaper. The server manages the world map, player sessions, player movement, multiplayer state, item pickup and placement, and tile interactions such as opening and closing doors.
 
 The web client talks with the server via REST-style HTTP endpoints. The server runs on local port `8000`.
+Designed for scalable cloud infrastructure, containerised with **Docker**, and automatically deployed to **AWS EC2 via Terraform and GitHub Actions**.
 
 ## Tech Stack
 
-Language: Java (JDK 18+)
-HTTP Server: The Java built-in `com.sun.net.httpserver.HttpServer`
-Data Storage: Text-based map loaded from `maps/world.txt`
-Containerisation: Docker Desktop
-Testing: JUnit 5
-CI/CD: GitHub Actions
-Infrastructure as Code: Terraform
-Cloud Deployment: AWS EC2
-Version Control: Git + GitHub Desktop
+- **Language:** Java (JDK 18+)
+- **HTTP Server Framework:** Java Native `com.sun.net.httpserver`
+- **Containerisation:** Docker
+- **Infrastructure as Code (IaC):** Terraform
+- **Cloud Infrastructure:** AWS EC2 & Elastic IP
+- **CI/CD Pipeline:** GitHub Actions
+- **Testing:** JUnit 5 & Maven
 
 ## Features of the game
 
-- Tile-based map loaded from `maps/world.txt`
-- Authenticated login and logout system
-- Session-based player states
-- Multiple players supported at the same time
-- Different player sprites displayed on the map
-- Player movement using north, south, east, and west directions
-- Collision detection for blocking tiles
-- Item pickup using `/take`
-- Item placement using `/place`
-- Item and tile interaction using `/use`
-- CORS headers for QuestShaper browser access
+- **Session Management:** Secure token-based session lifecycle (`/login`, `/logout`) with custom SHA-256 password hashing.
+- **Spatial Processing:** Real-time tile grid management, collision detection, boundary wrapping, and player occlusion checks.
+- **Multiplayer State Engine:** Multi-tenant support allowing multiple active sessions to interact on the world grid simultaneously.
+- **Dynamic Tile Stacking:** Interactive inventory management system (`/take`, `/place`, `/use`) supporting complex item/environment interactions (e.g., keys unlocking doors).
+- **CORS-Enabled REST API:** Seamless integration with web-based frontend clients.
+
+## System Architecture & Workflow
+
+```text
+  +------------------+         REST / JSON API          +--------------------+
+  | QuestShaper Web  |  <---------------------------->  | Docker Container   |
+  | Frontend Client  |                                  | (Java HTTP Server) |
+  +------------------+                                  +--------------------+
+                                                                  |
+                                                         Deployed on AWS EC2
+                                                         Provisioned via Terraform
 
 ## Authentication
 
@@ -45,7 +49,7 @@ username:password
 Multiple users are separated with commas:
 
 ```powershell
-$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123"
+$env:USERS="Tanvir:tanvir123"
 ```
 
 The client sends the password as a SHA-256 hash of:
@@ -67,7 +71,7 @@ Open a PowerShell terminal in the project folder.
 Set the allowed users:
 
 ```powershell
-$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123"
+$env:USERS="Tanvir:tanvir123"
 ```
 
 Compile the Java source files and start the server:
@@ -94,7 +98,7 @@ docker build -t questshaper-server .
 Run the container locally:
 
 ```powershell
-docker run -p 8000:8000 -e USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123" questshaper-server
+docker run -p 8000:8000 -e USERS="Tanvir:tanvir123" questshaper-server
 ```
 
 The server will be available at:
@@ -440,8 +444,6 @@ This means the browser client is running locally, but all game API requests are 
 
 ## References
 
-- COMP3050 workshop material, especially the Java HTTP Server, Maven/JUnit, Docker, GitHub Actions, AWS deployment, and Terraform workshops: https://jumormt.github.io/COMP3050/
-- COMP3050 Team Project Assignment 2026 - API v3 specification.
 - Oracle Java documentation for `com.sun.net.httpserver.HttpServer`: https://docs.oracle.com/en/java/javase/18/docs/api/jdk.httpserver/com/sun/net/httpserver/HttpServer.html
 - Docker documentation for building and running containers: https://docs.docker.com/
 - GitHub Actions documentation: https://docs.github.com/en/actions
