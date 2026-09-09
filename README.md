@@ -36,6 +36,24 @@ Designed for scalable cloud infrastructure, containerised with **Docker**, and a
                                                          Deployed on AWS EC2
                                                          Provisioned via Terraform
 ```
+
+## Screenshots & Showcase
+
+### 1. User Authentication & Session Handshake
+*SHA-256 encrypted authentication flow connecting the QuestShaper web client to the Java HTTP server endpoint.*
+
+![Authentication Interface](assets/Authentication.PNG)
+
+### 2. Real-Time Multiplayer Gameplay & Tile Interactions
+*Active multiplayer state rendering synchronized player sprites, walkable paths, collision boundaries, and interactive environment items (doors, keys, axes).*
+
+![Multiplayer Gameplay](assets/Multiplayer%20gameplay.PNG)
+
+### 3. Production Deployment on AWS EC2
+*Live containerised instance running on AWS EC2, provisioned via Terraform and deployed through automated GitHub Actions pipelines.*
+
+![AWS EC2 Instance](assets/AWS%20instance.PNG)
+
 ## Authentication
 
 The server uses a `USERS` environment variable to define valid users.
@@ -139,14 +157,14 @@ A successful deployment should return HTTP `401 Unauthorized`, because the serve
 When running in a Docker Container, use the following command:
 
 ```powershell
-export USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123"
+export USERS="Tanvir:tanvir123"
 mvn clean test
 ```
 
 If running locally, run the automated JUnit tests with by declaring USERS and then using Maven:
 
 ```powershell
-$env:USERS="Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123,Marker:marker123,Guest:guest123"
+$env:USERS="Tanvir:tanvir123"
 mvn test
 ```
 
