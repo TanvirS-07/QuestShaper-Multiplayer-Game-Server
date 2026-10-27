@@ -67,7 +67,7 @@ username:password
 Multiple users are separated with commas:
 
 ```powershell
-$env:USERS="Tanvir:tanvir123"
+$env:USERS="Tanvir:ci-only-pw-1"
 ```
 
 The client sends the password as a SHA-256 hash of:
@@ -79,7 +79,7 @@ name;password
 For example, the password check for `Tanvir` uses the hash of:
 
 ```text
-Tanvir;tanvir123
+Tanvir;ci-only-pw-1
 ```
 
 ## Running the Project Locally
@@ -89,7 +89,7 @@ Open a PowerShell terminal in the project folder.
 Set the allowed users:
 
 ```powershell
-$env:USERS="Tanvir:tanvir123"
+$env:USERS="Tanvir:ci-only-pw-1"
 ```
 
 Compile the Java source files and start the server:
@@ -116,7 +116,7 @@ docker build -t questshaper-server .
 Run the container locally:
 
 ```powershell
-docker run -p 8000:8000 -e USERS="Tanvir:tanvir123" questshaper-server
+docker run -p 8000:8000 -e USERS="Tanvir:ci-only-pw-1" questshaper-server
 ```
 
 The server will be available at:
@@ -157,14 +157,14 @@ A successful deployment should return HTTP `401 Unauthorized`, because the serve
 When running in a Docker Container, use the following command:
 
 ```powershell
-export USERS="Tanvir:tanvir123"
+export USERS="Tanvir:ci-only-pw-1"
 mvn clean test
 ```
 
 If running locally, run the automated JUnit tests with by declaring USERS and then using Maven:
 
 ```powershell
-$env:USERS="Tanvir:tanvir123"
+$env:USERS="Tanvir:ci-only-pw-1"
 mvn test
 ```
 

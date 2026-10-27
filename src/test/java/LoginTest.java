@@ -71,7 +71,7 @@ public class LoginTest {
     @Test @Order(1)
     @DisplayName("Login - valid user Tanvir returns 200 with session token")
     void loginValidTanvir() throws Exception {
-        String hash = sha256("Tanvir;tanvir123");
+        String hash = sha256("Tanvir;ci-only-pw-1");
         String json = "{\"name\":\"Tanvir\",\"encpswrd\":\"" + hash + "\"}";
         var res = post("/login", json);
 
@@ -85,11 +85,11 @@ public class LoginTest {
     @Test @Order(2)
     @DisplayName("Login - valid user Shaif returns 200 with session token")
     void loginValidShaif() throws Exception {
-        String hash = sha256("Shaif;Shaif123");
+        String hash = sha256("Shaif;ci-only-pw-4");
         String json = "{\"name\":\"Shaif\",\"encpswrd\":\"" + hash + "\"}";
         var res = post("/login", json);
 
-        assertEquals(200, res.statusCode(), "Shaif should be able to login. Check USERS env var includes Shaif:Shaif123");
+        assertEquals(200, res.statusCode(), "Shaif should be able to login. Check USERS env var includes Shaif:ci-only-pw-4");
         assertTrue(res.body().contains("session"));
     }
 

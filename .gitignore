@@ -8,3 +8,12 @@
 /bin/
 *.gz
 *.pem
+# Never commit secrets or Terraform state
+.env
+.env.*
+!.env.example
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
+*.auto.tfvars

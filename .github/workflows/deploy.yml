@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -20,7 +23,7 @@ jobs:
 
       - name: Build and run tests
         env:
-          USERS: Tanvir:tanvir123,Andre:andre123,Tahsin:tahsin123,Shaif:Shaif123
+          USERS: Tanvir:ci-only-pw-1,Andre:ci-only-pw-2,Tahsin:ci-only-pw-3,Shaif:ci-only-pw-4
         run: mvn test
 
       - name: Log in to Docker Hub

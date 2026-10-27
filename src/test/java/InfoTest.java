@@ -33,7 +33,7 @@ public class InfoTest {
         
         // Login Tanvir before all info tests
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest("Tanvir;tanvir123".getBytes());
+        byte[] hash = digest.digest("Tanvir;ci-only-pw-1".getBytes());
         StringBuilder hex = new StringBuilder();
         for (byte b : hash) hex.append(String.format("%02x", b));
         String hashStr = hex.toString();

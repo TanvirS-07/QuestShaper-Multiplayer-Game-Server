@@ -70,7 +70,7 @@ public class LogoutTest {
     @Test @Order(90)
     @DisplayName("Logout - valid session returns 200")
     void logoutValidSession() throws Exception {
-        String hash = sha256("Andre;andre123");
+        String hash = sha256("Andre;ci-only-pw-2");
         String json = "{\"name\":\"Andre\",\"encpswrd\":\"" + hash + "\"}";
         var loginRes = post("/login", json);
         assertEquals(200, loginRes.statusCode());
@@ -84,7 +84,7 @@ public class LogoutTest {
     @Test @Order(91)
     @DisplayName("Logout - session cannot be reused after logout")
     void logoutSessionInvalidatedAfterLogout() throws Exception {
-        String hash = sha256("Tahsin;tahsin123");
+        String hash = sha256("Tahsin;ci-only-pw-3");
         String json = "{\"name\":\"Tahsin\",\"encpswrd\":\"" + hash + "\"}";
         var loginRes = post("/login", json);
         assertEquals(200, loginRes.statusCode());
@@ -117,7 +117,7 @@ public class LogoutTest {
     @Test @Order(94)
     @DisplayName("Logout - same session cannot be logged out twice")
     void logoutTwiceFails() throws Exception {
-        String hash = sha256("Tanvir;tanvir123");
+        String hash = sha256("Tanvir;ci-only-pw-1");
         String json = "{\"name\":\"Tanvir\",\"encpswrd\":\"" + hash + "\"}";
         var loginRes = post("/login", json);
         assertEquals(200, loginRes.statusCode());
