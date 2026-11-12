@@ -8,3 +8,8 @@
 /bin/
 *.gz
 *.pem
+# editor and OS files
+.idea/
+*.iml
+.DS_Store
+*.log
