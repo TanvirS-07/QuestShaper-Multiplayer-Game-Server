@@ -1,5 +1,7 @@
 # QuestShaper — Containerised Multiplayer Game Server
 
+[![Java CI](https://github.com/TanvirS-07/QuestShaper-Multiplayer-Game-Server/actions/workflows/ci.yml/badge.svg)](https://github.com/TanvirS-07/QuestShaper-Multiplayer-Game-Server/actions/workflows/ci.yml)
+
 ## The project overview
 
 The project implements a Java HTTP server for a 2D tile-based adventure game running through QuestShaper. The server manages the world map, player sessions, player movement, multiplayer state, item pickup and placement, and tile interactions such as opening and closing doors.
